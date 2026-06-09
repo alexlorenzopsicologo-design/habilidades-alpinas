@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Habilidades Técnicas · Lyskamm</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #0C0C0A; --surface: #141412; --surface2: #1C1C19;
+  --border: #2A2A26; --border2: #3A3A34;
+  --text: #E8E4DC; --text2: #9A9690; --text3: #5A5A54;
+  --ice: #7BB8D4; --ice-dim: #2A4A5C; --ice-glow: rgba(123,184,212,0.08);
+  --amber: #D4964A; --amber-dim: #4A3018;
+  --green: #6AAA7A; --green-dim: #1E3828;
+  --red: #C4544A; --red-dim: #3C1A18; --gold: #C8A84A;
+}
+html { scroll-behavior: smooth; }
+body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; overflow-x:hidden; }
+body::before {
+  content:''; position:fixed; inset:0; opacity:0.025; pointer-events:none; z-index:1000;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:200px 200px;
+}
+.masthead { min-height:100vh; display:flex; flex-direction:column; justify-content:flex-end; padding:60px; position:relative; overflow:hidden; }
+.masthead-grid { position:absolute; inset:0; background-image:linear-gradient(rgba(123,184,212,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(123,184,212,0.04) 1px,transparent 1px); background-size:60px 60px; mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 0%,transparent 70%); }
+.masthead-glow { position:absolute; width:600px; height:600px; background:radial-gradient(circle,rgba(123,184,212,0.06) 0%,transparent 70%); top:-100px; right:-100px; pointer-events:none; }
+.masthead-content { position:relative; z-index:2; max-width:900px; }
+.skill-count { font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.25em; text-transform:uppercase; color:var(--ice); opacity:0.7; margin-bottom:32px; display:flex; align-items:center; gap:14px; }
+.skill-count::before { content:''; display:block; width:40px; height:1px; background:var(--ice); opacity:0.4; }
+.masthead h1 { font-family:'Playfair Display',Georgia,serif; font-size:clamp(48px,8vw,96px); line-height:0.95; font-weight:700; color:var(--text); margin-bottom:28px; letter-spacing:-0.02em; }
+.masthead h1 em { font-style:italic; color:var(--ice); }
+.masthead-sub { font-size:16px; color:var(--text2); line-height:1.7; max-width:560px; margin-bottom:48px; font-weight:300; }
+.progression-bar { display:flex; gap:0; border:1px solid var(--border); border-radius:2px; overflow:hidden; max-width:500px; }
+.prog-step { flex:1; padding:10px 14px; font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.1em; text-transform:uppercase; border-right:1px solid var(--border); color:var(--text3); cursor:pointer; transition:all .2s; text-decoration:none; }
+.prog-step:last-child { border-right:none; }
+.prog-step:hover { background:var(--surface); color:var(--text2); }
+.prog-step.ps-1 { color:var(--green); background:var(--green-dim); }
+.prog-step.ps-2 { color:var(--ice); background:var(--ice-dim); }
+.prog-step.ps-3 { color:var(--amber); background:var(--amber-dim); }
+.prog-step.ps-4 { color:var(--red); background:var(--red-dim); }
+.skill-section { padding:100px 60px; border-top:1px solid var(--border); position:relative; max-width:1100px; margin:0 auto; }
+.skill-header { display:grid; grid-template-columns:80px 1fr; gap:32px; align-items:start; margin-bottom:60px; }
+.skill-num { font-family:'Playfair Display',serif; font-size:72px; font-weight:700; font-style:italic; line-height:1; color:var(--border2); }
+.skill-difficulty { font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.2em; text-transform:uppercase; padding:4px 10px; border-radius:2px; display:inline-block; margin-bottom:14px; }
+.diff-1 { background:var(--green-dim); color:var(--green); }
+.diff-2 { background:var(--ice-dim); color:var(--ice); }
+.diff-3 { background:var(--amber-dim); color:var(--amber); }
+.diff-4 { background:var(--red-dim); color:var(--red); }
+.skill-title { font-family:'Playfair Display',serif; font-size:clamp(28px,4vw,48px); font-weight:700; color:var(--text); line-height:1.1; margin-bottom:8px; }
+.skill-subtitle { font-size:15px; color:var(--text2); font-weight:300; line-height:1.6; }
+.skill-body { display:grid; grid-template-columns:1fr 1fr; gap:32px; margin-bottom:40px; }
+.theory-block { background:var(--surface); border:1px solid var(--border); border-radius:3px; padding:28px 32px; }
+.block-label { font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.2em; text-transform:uppercase; color:var(--text3); margin-bottom:16px; display:flex; align-items:center; gap:10px; }
+.block-label::after { content:''; flex:1; height:1px; background:var(--border); }
+.theory-block h4 { font-family:'Playfair Display',serif; font-size:18px; font-weight:700; color:var(--text); margin-bottom:12px; }
+.theory-block p,.theory-block li { font-size:14px; color:var(--text2); line-height:1.75; font-weight:300; }
+.theory-block ul { list-style:none; padding:0; }
+.theory-block ul li { padding:6px 0 6px 16px; position:relative; border-bottom:1px solid var(--border); }
+.theory-block ul li:last-child { border-bottom:none; }
+.theory-block ul li::before { content:'—'; position:absolute; left:0; color:var(--text3); font-family:'Space Mono',monospace; font-size:11px; }
+.clave { margin-top:16px; padding:12px 16px; border-left:2px solid var(--ice); background:var(--ice-glow); font-size:13px; color:var(--ice); line-height:1.6; font-style:italic; }
+.steps-block { background:var(--surface); border:1px solid var(--border); border-radius:3px; padding:28px 32px; }
+.step-item { display:grid; grid-template-columns:28px 1fr; gap:14px; padding:14px 0; border-bottom:1px solid var(--border); align-items:start; }
+.step-item:last-child { border-bottom:none; }
+.step-n { font-family:'Space Mono',monospace; font-size:11px; color:var(--text3); padding-top:2px; }
+.step-title { font-size:14px; font-weight:500; color:var(--text); margin-bottom:4px; }
+.step-desc { font-size:13px; color:var(--text2); line-height:1.65; font-weight:300; }
+.resources-row { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:12px; }
+.resource-card { border:1px solid var(--border); border-radius:3px; overflow:hidden; text-decoration:none; transition:border-color .2s,transform .2s; display:block; background:var(--surface); }
+.resource-card:hover { border-color:var(--border2); transform:translateY(-2px); }
+.resource-thumb { width:100%; aspect-ratio:16/9; background:var(--surface2); position:relative; overflow:hidden; display:flex; align-items:center; justify-content:center; }
+.yt-play { position:absolute; width:44px; height:44px; background:rgba(255,255,255,0.1); border-radius:50%; display:flex; align-items:center; justify-content:center; border:1px solid rgba(255,255,255,0.15); }
+.yt-play::after { content:''; border-left:14px solid rgba(255,255,255,0.7); border-top:8px solid transparent; border-bottom:8px solid transparent; margin-left:3px; }
+.resource-thumb.thumb-guide .yt-play { background:rgba(123,184,212,0.15); border-color:rgba(123,184,212,0.3); }
+.resource-thumb.thumb-guide .yt-play::after { border-left:0; width:14px; height:14px; border:none; background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%237BB8D4' viewBox='0 0 24 24'%3E%3Cpath d='M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm-1 1.5L18.5 9H13V3.5zM6 20V4h5v7h7v9H6z'/%3E%3C/svg%3E") no-repeat center/contain; }
+.resource-type { font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.15em; text-transform:uppercase; padding:2px 7px; border-radius:2px; position:absolute; top:8px; left:8px; }
+.rt-video { background:rgba(196,84,74,0.8); color:#FFCCC8; }
+.rt-guide { background:rgba(123,184,212,0.8); color:#0A2030; }
+.rt-es { background:rgba(106,170,122,0.85); color:#0A2010; }
+.resource-info { padding:12px 14px; }
+.resource-source { font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:var(--text3); margin-bottom:4px; }
+.resource-title { font-size:12px; color:var(--text2); line-height:1.5; font-weight:400; }
+.error-box { background:var(--red-dim); border:1px solid var(--red); border-radius:3px; padding:14px 18px; font-size:13px; color:#F0A09A; line-height:1.6; margin-top:20px; display:flex; gap:12px; align-items:flex-start; }
+.error-icon { font-family:'Space Mono',monospace; font-size:11px; color:var(--red); margin-top:2px; flex-shrink:0; }
+.warn-box { background:var(--amber-dim); border:1px solid var(--amber); border-radius:3px; padding:14px 18px; font-size:13px; color:#F0C88A; line-height:1.6; margin-top:20px; display:flex; gap:12px; align-items:flex-start; }
+.warn-icon { font-family:'Space Mono',monospace; font-size:11px; color:var(--amber); margin-top:2px; flex-shrink:0; }
+.sticky-nav { position:sticky; top:0; z-index:100; background:rgba(12,12,10,0.92); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); padding:12px 60px; display:flex; align-items:center; gap:24px; overflow-x:auto; scrollbar-width:none; }
+.sticky-nav::-webkit-scrollbar { display:none; }
+.snav-label { font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.18em; text-transform:uppercase; color:var(--text3); white-space:nowrap; flex-shrink:0; }
+.snav-items { display:flex; gap:4px; align-items:center; }
+.snav-dot { width:28px; height:28px; border-radius:50%; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; font-family:'Space Mono',monospace; font-size:10px; color:var(--text3); text-decoration:none; transition:all .2s; flex-shrink:0; }
+.snav-dot:hover { border-color:var(--ice); color:var(--ice); }
+.snav-dot.d-green { border-color:var(--green); color:var(--green); }
+.snav-dot.d-ice   { border-color:var(--ice); color:var(--ice); }
+.snav-dot.d-amber { border-color:var(--amber); color:var(--amber); }
+.snav-dot.d-red   { border-color:var(--red); color:var(--red); }
+
+/* TOOLTIP */
+.tip { cursor:help; border-bottom:1px dashed var(--ice); color:var(--ice); position:relative; white-space:nowrap; }
+.tip-box { display:none; position:absolute; bottom:calc(100% + 8px); left:50%; transform:translateX(-50%); background:#1A2C38; border:1px solid var(--ice); border-radius:4px; padding:10px 14px; width:240px; font-size:12px; color:var(--text2); line-height:1.6; z-index:200; font-style:normal; pointer-events:none; white-space:normal; }
+.tip-box::after { content:''; position:absolute; top:100%; left:50%; transform:translateX(-50%); border:6px solid transparent; border-top-color:#1A2C38; }
+.tip:hover .tip-box { display:block; }
+
+/* FOTO PASO RÁPEL */
+.step-with-img { display:grid; grid-template-columns:1fr 160px; gap:16px; align-items:start; }
+.step-img { width:160px; border-radius:3px; overflow:hidden; border:1px solid var(--border); flex-shrink:0; }
+.step-img img { width:100%; display:block; }
+.step-img-cap { font-family:'Space Mono',monospace; font-size:9px; color:var(--text3); padding:5px 8px; letter-spacing:.06em; line-height:1.4; background:var(--surface2); }
+
+/* ILUSTRACIONES SVG inline */
+.step-illus { width:160px; height:110px; background:var(--surface2); border:1px solid var(--border); border-radius:3px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+
+footer { border-top:1px solid var(--border); padding:50px 60px; font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.15em; text-transform:uppercase; color:var(--text3); display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+
+@media (max-width:760px) {
+  .masthead { padding:32px 24px; min-height:auto; padding-top:80px; }
+  .skill-section { padding:70px 24px; }
+  .skill-header { grid-template-columns:1fr; gap:12px; }
+  .skill-num { font-size:48px; }
+  .skill-body { grid-template-columns:1fr; }
+  .resources-row { grid-template-columns:1fr; }
+  .sticky-nav { padding:12px 24px; }
+  footer { padding:40px 24px; }
+  .step-with-img { grid-template-columns:1fr; }
+  .step-img { width:100%; }
+  .step-illus { width:100%; }
+}
+</style>
+</head>
+<body>
+<header class="masthead">
+  <div class="masthead-grid"></div>
+  <div class="masthead-glow"></div>
+  <div class="masthead-content">
+    <div class="skill-count">6 habilidades técnicas</div>
+    <h1>Preparación<br>técnica para<br>el <em>Lyskamm</em></h1>
+    <p class="masthead-sub">De la técnica más accesible a la más exigente. Cada habilidad se apoya en la anterior — dominar las primeras es condición para afrontar las últimas con seguridad real.</p>
+    <div class="progression-bar">
+      <a href="#s1" class="prog-step ps-1">Base</a>
+      <a href="#s3" class="prog-step ps-2">Glaciar</a>
+      <a href="#s4" class="prog-step ps-3">Cordada</a>
+      <a href="#s5" class="prog-step ps-4">Rápel</a>
+    </div>
+  </div>
+</header>
+
+<nav class="sticky-nav">
+  <span class="snav-label">Progresión</span>
+  <div class="snav-items">
+    <a href="#s1" class="snav-dot d-green">1</a>
+    <a href="#s2" class="snav-dot d-green">2</a>
+    <a href="#s3" class="snav-dot d-ice">3</a>
+    <a href="#s4" class="snav-dot d-ice">4</a>
+    <a href="#s5" class="snav-dot d-amber">5</a>
+    <a href="#s6" class="snav-dot d-red">6</a>
+  </div>
+  <span style="font-family:'Space Mono',monospace;font-size:9px;color:var(--text3);margin-left:8px;letter-spacing:.1em;">● Verde = base &nbsp;·&nbsp; Azul = glaciar &nbsp;·&nbsp; Ámbar = cordada &nbsp;·&nbsp; Rojo = rápel</span>
+</nav>
+
+<!-- ══ SKILL 1 — CRAMPONES ══ -->
+<section class="skill-section" id="s1">
+  <div class="skill-header">
+    <div class="skill-num">01</div>
+    <div class="skill-meta">
+      <span class="skill-difficulty diff-1">Nivel base · verde</span>
+      <h2 class="skill-title">Crampones<br>en terreno llano y moderado</h2>
+      <p class="skill-subtitle">La base de todo lo demás. Sin soltura con los crampones, el glaciar se convierte en un problema. Con soltura, es simplemente terreno.</p>
+    </div>
+  </div>
+  <div class="skill-body">
+    <div class="theory-block">
+      <div class="block-label">Concepto clave</div>
+      <h4>Pie plano en pendiente moderada</h4>
+      <p>En pendiente moderada, lo que buscamos es apoyar todos los puntos del crampón sobre la nieve o el hielo al mismo tiempo. El pie queda plano, con el tobillo girado hacia afuera según la inclinación. Esta técnica ahorra los gemelos para cuando el terreno se ponga vertical de verdad — usar solo las puntas delanteras <span class="tip">(<span class="tip-box">Frontpointing: técnica en la que solo se apoyan las dos puntas delanteras del crampón. Consume mucho los gemelos y se reserva para pendientes empinadas.</span>frontpointing</span>) cansa en minutos en pendiente sostenida.</p>
+      <div class="clave">Si en terreno moderado sientes presión en los gemelos, estás usando mal la técnica. El pie plano distribuye el peso y descansa. Los gemelos se guardan para los tramos verticales.</div>
+      <ul style="margin-top:16px;">
+        <li>Pies ligeramente abiertos en V hacia afuera — no paralelos</li>
+        <li>Rodillas sueltas, caderas sobre los pies, peso centrado</li>
+        <li>En travesía: pie de abajo plano, pie de arriba rotado hacia la pendiente</li>
+        <li>Las botas tienen que ser rígidas — con botas blandas el pie plano no agarra bien</li>
+        <li>Llevar los <span class="tip">(<span class="tip-box">Antienganche o antipinchazos: plataforma de goma bajo el crampón que evita que la nieve húmeda se acumule formando una bola resbaladiza.</span>antienganche</span>) en nieve blanda cercana a 0°C</li>
+      </ul>
+    </div>
+    <div class="steps-block">
+      <div class="block-label">Paso a paso</div>
+      <div class="step-item">
+        <span class="step-n">01</span>
+        <div class="step-content">
+          <div class="step-title">Colocar los crampones antes de salir</div>
+          <p class="step-desc">Ajustar en casa, nunca en la montaña con el viento y el frío. El talón tiene que encajar con firmeza en el gancho trasero. Ningún movimiento entre bota y crampón. Practicar el ajuste hasta hacerlo con guantes en menos de 60 segundos.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <span class="step-n">02</span>
+        <div class="step-content">
+          <div class="step-title">Primeros pasos: zancadas amplias</div>
+          <p class="step-desc">Caminar con pasos más abiertos de lo habitual para que los puntos del crampón no enganchen el pantalón de la pierna contraria. En terreno suave, pie completamente plano. La seguridad viene de repetirlo, no del primer intento.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <span class="step-n">03</span>
+        <div class="step-content">
+          <div class="step-title">Pendiente moderada: en zigzag</div>
+          <p class="step-desc">Subir en zigzag girando el cuerpo hacia la pendiente en cada cambio de dirección. El piolet en posición de bastón: mano en la cabeza, punta clavada ligeramente por delante y arriba. Anclar el piolet antes de cada paso en terreno más duro.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <span class="step-n">04</span>
+        <div class="step-content">
+          <div class="step-title">Pendiente empinada: puntas delanteras</div>
+          <p class="step-desc">Solo las dos puntas delanteras en la nieve o el hielo. Talones abajo para maximizar el agarre. Golpear con decisión — un punto bien colocado a la primera, sin rascar. Reservar esta técnica para los tramos más verticales.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="resources-row">
+    <a href="https://www.youtube.com/watch?v=WLl-AZe0BPg" target="_blank" class="resource-card">
+      <div class="resource-thumb"><div class="yt-play"></div><span class="resource-type rt-es">ES · Video</span></div>
+      <div class="resource-info"><div class="resource-source">YouTube · En español</div><div class="resource-title">Trucos con piolet y crampones — técnica de progresión y uso correcto</div></div>
+    </a>
+    <a href="https://www.youtube.com/watch?v=3-OXSftCVV0" target="_blank" class="resource-card">
+      <div class="resource-thumb"><div class="yt-play"></div><span class="resource-type rt-es">ES · Video</span></div>
+      <div class="resource-info"><div class="resource-source">Revista Campo Base · En español</div><div class="resource-title">Técnicas de seguridad en montaña: uso del piolet y crampones (Alberto Ayora)</div></div>
+    </a>
+    <a href="https://www.rei.com/learn/expert-advice/how-to-use-crampons.html" target="_blank" class="resource-card">
+      <div class="resource-thumb thumb-guide"><div class="yt-play"></div><span class="resource-type rt-guide">Guía EN</span></div>
+      <div class="resource-info"><div class="resource-source">REI Expert Advice</div><div class="resource-title">How to Use Crampons — técnica paso a paso con ilustraciones completas</div></div>
+    </a>
+  </div>
+</section>
+
+<!-- ══ SKILL 2 — PIOLET Y PARADA DE EMERGENCIA ══ -->
+<section class="skill-section" id="s2">
+  <div class="skill-header">
+    <div class="skill-num">02</div>
+    <div class="skill-meta">
+      <span class="skill-difficulty diff-1">Nivel base · verde</span>
+      <h2 class="skill-title">Piolet:<br>posiciones y parada de emergencia</h2>
+      <p class="skill-subtitle">El piolet no es solo para frenar una caída. Su función principal es evitar que la caída ocurra. La <span class="tip" style="font-size:inherit">autodetención<span class="tip-box">Autodetención o parada de emergencia: maniobra con el piolet para frenar una caída sobre nieve o hielo. Requiere práctica para que sea refleja.</span></span> es el último recurso, no el primero.</p>
+    </div>
+  </div>
+  <div class="skill-body">
+    <div class="theory-block">
+      <div class="block-label">Las tres posiciones del piolet</div>
+      <h4>Cada terreno, una posición distinta</h4>
+      <p>El piolet tiene tres posiciones de uso activo según lo que el terreno exige. La transición entre ellas tiene que ser fluida y automática:</p>
+      <ul style="margin-top:12px;">
+        <li><strong style="color:var(--text)">Posición de bastón:</strong> pendiente suave, una mano en la cabeza del piolet, punta en la nieve. La posición de marcha habitual en glaciar.</li>
+        <li><strong style="color:var(--text)">Posición de ancla:</strong> pendiente media, ambas manos en el mango, <span class="tip">pico<span class="tip-box">Pico del piolet: la parte curvada y afilada de la cabeza. Es la que se clava en la nieve para frenar o anclar. La parte plana se llama pala o azuela.</span></span> inclinado hacia la nieve por delante. Para pasos delicados.</li>
+        <li><strong style="color:var(--text)">Posición de tracción:</strong> terreno muy empinado, pico clavado por encima de la cabeza, tirando hacia arriba con ambas manos. Solo en los tramos más verticales.</li>
+      </ul>
+      <div class="clave">La mano que sujeta el piolet cambia según la dirección de marcha. En travesía, el piolet siempre en la mano del lado de la pendiente (la mano de arriba). Si caes, ya está en posición de freno.</div>
+    </div>
+    <div class="steps-block">
+      <div class="block-label">Parada de emergencia · secuencia exacta</div>
+      <div class="step-item">
+        <span class="step-n">01</span>
+        <div class="step-content">
+          <div class="step-title">La dragonera siempre en la muñeca</div>
+          <p class="step-desc">La correa de seguridad del piolet en la muñeca, siempre. Si el piolet se suelta al caer, la parada de emergencia no existe. Es el error más frecuente.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <span class="step-n">02</span>
+        <div class="step-content">
+          <div class="step-title">Al caer: rotar para quedar boca abajo</div>
+          <p class="step-desc">En el momento de caer, independientemente de la posición, el cuerpo rota para quedar boca abajo con los pies hacia abajo. El pico del piolet se apoya en el hombro opuesto a la mano que lo sujeta.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <span class="step-n">03</span>
+        <div class="step-content">
+          <div class="step-title">Clavar el pico progresivamente</div>
+          <p class="step-desc">Hundir el pico poco a poco mientras se arquea la espalda. No clavarlo de golpe — un frenazo brusco puede hacer palanca y arrancarte el piolet de las manos. El frenado es gradual y controlado.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <span class="step-n">04</span>
+        <div class="step-content">
+          <div class="step-title">Pies arriba hasta frenar</div>
+          <p class="step-desc">Con crampones puestos, bajar los pies mientras se desliza puede provocar un giro violento. Los pies se bajan solo cuando la velocidad es casi nula. Es el error más peligroso de la secuencia.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="resources-row">
+    <a href="https://www.youtube.com/watch?v=3-OXSftCVV0" target="_blank" class="resource-card">
+      <div class="resource-thumb"><div class="yt-play"></div><span class="resource-type rt-es">ES · Video</span></div>
+      <div class="resource-info"><div class="resource-source">Revista Campo Base · En español</div><div class="resource-title">Autodetención con piolet y crampones — vídeo de referencia en castellano</div></div>
+    </a>
+    <a href="https://www.youtube.com/watch?v=QN58FtFy7dU" target="_blank" class="resource-card">
+      <div class="resource-thumb"><div class="yt-play"></div><span class="resource-type rt-video">Video EN</span></div>
+      <div class="resource-info"><div class="resource-source">Glenmore Lodge · YouTube</div><div class="resource-title">Winter skills: how to ice axe arrest — técnica completa con demostración</div></div>
+    </a>
+    <a href="https://montanasegura.com/tecnicas-de-progresion-para-montana-invernal/" target="_blank" class="resource-card">
+      <div class="resource-thumb thumb-guide"><div class="yt-play"></div><span class="resource-type rt-es">ES · Guía</span></div>
+      <div class="resource-info"><div class="resource-source">Montaña Segura · En español</div><div class="resource-title">Técnicas de progresión para montaña invernal — crampones, piolet y autodetención</div></div>
+    </a>
+  </div>
+  <div class="error-box">
+    <span class="error-icon">!</span>
+    <span>En nieve helada con mucha pendiente, la parada de emergencia puede no ser suficiente para frenar antes de llegar a un risco o una <span class="tip" style="color:#F0A09A">rimaya<span class="tip-box" style="background:#3C1A18;border-color:var(--red);">Rimaya: grieta entre el glaciar y la roca de la pared, formada por el deslizamiento del hielo. Puede ser un pozo de varios metros de profundidad, parcialmente oculto bajo nieve.</span></span>. La técnica funciona bien en nieve blanda-media. En hielo puro, el pico roza sin morder. La prioridad real es no caer — no confiar en poder frenar siempre.</span>
+  </div>
+</section>
+
+<!-- ══ SKILL 3 — GLACIAR ENCORDADO ══ -->
+<section class="skill-section" id="s3">
+  <div class="skill-header">
+    <div class="skill-num">03</div>
+    <div class="skill-meta">
+      <span class="skill-difficulty diff-2">Glaciar · azul</span>
+      <h2 class="skill-title">Moverse encordados<br>en glaciar</h2>
+      <p class="skill-subtitle">La diferencia entre caminar por nieve y cruzar un glaciar es la grieta invisible bajo los pies. La cuerda no evita la caída — permite el rescate.</p>
+    </div>
+  </div>
+  <div class="skill-body">
+    <div class="theory-block">
+      <div class="block-label">Por qué se va encordado en glaciar</div>
+      <h4>Las grietas y el sistema de rescate</h4>
+      <p>Las <span class="tip">grietas de glaciar<span class="tip-box">Grieta o crevasse: fisura profunda en el glaciar causada por el movimiento del hielo. Puede estar oculta bajo un puente de nieve que soporta el peso de una persona pero cede sin aviso.</span></span> pueden estar cubiertas por puentes de nieve que soportan el peso de una persona pero ceden sin previo aviso. La cuerda entre los tres tiene que estar con la tensión justa para que, si uno cae, los otros dos puedan frenar antes de que se hunda del todo.</p>
+      <ul style="margin-top:12px;">
+        <li>Separación ideal entre tres personas: 8–10 metros entre cada uno</li>
+        <li>La cuerda cuelga en arco suave — ni tensa ni con curva grande en el suelo</li>
+        <li><span class="tip">Nudos de freno<span class="tip-box">Nudos de freno o nudos mariposa: nudos intermedios en la cuerda que actúan como topes si alguien cae en una grieta, evitando que se hunda más de lo necesario.</span></span> (nudo mariposa) cada 2–3 metros en el tramo central</li>
+        <li>Cruzar las grietas en perpendicular, nunca en paralelo</li>
+        <li>Al girar, pasar siempre la cuerda por encima del pie — los crampones enganchan</li>
+      </ul>
+      <div class="clave">Si alguien grita "¡caigo!" — clavar el piolet como ancla inmediatamente y poner el cuerpo encima. La reacción tiene que ser refleja, no pensada. Hay que entrenarlo antes de llegar al glaciar.</div>
+    </div>
+    <div class="steps-block">
+      <div class="block-label">Gestión de la cuerda en movimiento</div>
+      <div class="step-item">
+        <span class="step-n">01</span>
+        <div class="step-content">
+          <div class="step-title">Encordarse correctamente para glaciar</div>
+          <p class="step-desc">Cada uno en el extremo o en punto intermedio de la cuerda con <span class="tip">nudo de ocho<span class="tip-box">Nudo de ocho pasado: el nudo estándar para encordarse en alpinismo. Se pasa por el arnés y se retrocede siguiendo el recorrido del nudo original. Es muy seguro y fácil de revisar.</span></span>. El exceso de cuerda se enrolla en bandolera — no se lleva en la mano ni se arrastra. El primero y el último llevan las espiras de reserva.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <span class="step-n">02</span>
+        <div class="step-content">
+          <div class="step-title">Ritmo y comunicación</div>
+          <p class="step-desc">El primero marca el ritmo que todos puedan seguir. Comunicación activa: "pausa", "girando", "zona de grietas". En el Lyskamm el viento puede tapar las voces — acordar señales antes de salir (tirones de cuerda para parar o continuar).</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <span class="step-n">03</span>
+        <div class="step-content">
+          <div class="step-title">En pendiente empinada</div>
+          <p class="step-desc">En pendiente mayor de 35°, el primero clava el piolet como ancla antes de que los otros dos avancen. Movimiento por turnos cortos, no simultáneo. Si alguien cae en pendiente dura sin ancla colocada, los tres van.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <span class="step-n">04</span>
+        <div class="step-content">
+          <div class="step-title">Reacción ante una caída</div>
+          <p class="step-desc">Gritar "¡caigo!" o tirones de cuerda. Los otros dos se tiran al suelo, piolet en posición de ancla, cuerpo encima. Mantener hasta que la cuerda deje de tensarse. No intentar sacar al compañero hasta tener el ancla asegurada.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="resources-row">
+    <a href="https://www.youtube.com/watch?v=dcbZOwdsQDc" target="_blank" class="resource-card">
+      <div class="resource-thumb"><div class="yt-play"></div><span class="resource-type rt-video">Video EN</span></div>
+      <div class="resource-info"><div class="resource-source">YouTube</div><div class="resource-title">Fundamentals of Moving Roped Together on Glacier — serie completa</div></div>
+    </a>
+    <a href="https://www.rei.com/learn/expert-advice/glacier-and-roped-travel-for-mountaineering.html" target="_blank" class="resource-card">
+      <div class="resource-thumb thumb-guide"><div class="yt-play"></div><span class="resource-type rt-guide">Guía EN</span></div>
+      <div class="resource-info"><div class="resource-source">REI Expert Advice</div><div class="resource-title">Glacier & Roped Travel for Mountaineering — separación, nudos de freno, grietas</div></div>
+    </a>
+    <a href="https://www.ortovox.com/uk/safety-academy-lab-ice/chapter-2/rope-teams" target="_blank" class="resource-card">
+      <div class="resource-thumb thumb-guide"><div class="yt-play"></div><span class="resource-type rt-guide">Guía EN</span></div>
+      <div class="resource-info"><div class="resource-source">Ortovox Safety Academy</div><div class="resource-title">Rope teams: spacing and roping up on a glacier — con diagramas</div></div>
+    </a>
+  </div>
+</section>
+
+<!-- ══ SKILL 4 — ESCALADA EN ROCA CON BOTAS ══ -->
+<section class="skill-section" id="s4">
+  <div class="skill-header">
+    <div class="skill-num">04</div>
+    <div class="skill-meta">
+      <span class="skill-difficulty diff-2">Glaciar · azul</span>
+      <h2 class="skill-title">Escalar roca<br>con botas y crampones</h2>
+      <p class="skill-subtitle">El Lyskamm tiene tramos de roca con crampones puestos. No es escalada deportiva — es un tipo de movimiento completamente distinto que requiere práctica específica.</p>
+    </div>
+  </div>
+  <div class="skill-body">
+    <div class="theory-block">
+      <div class="block-label">Por qué cambia todo</div>
+      <h4>La bota rígida no dobla el tobillo</h4>
+      <p>En escalada deportiva, el pie empuja desde la punta y aprovecha la fricción. Con botas de alpinismo <span class="tip">B2<span class="tip-box">Clasificación B2: bota de alpinismo de media rigidez, compatible con crampones de sistema mixto. Suficientemente rígida para crampones de 12 puntos pero con cierta flexión en el tobillo.</span></span>, el tobillo no dobla y la suela es rígida — hay que colocar el pie plano sobre la roca y buscar repisas amplias, no intentar agarrar con la punta. Con crampones, las puntas delanteras se usan en repisas pequeñas de roca, pero el talón tiene que quedar abajo para no deslizar.</p>
+      <ul style="margin-top:12px;">
+        <li>Leer el terreno antes de mover — el siguiente apoyo tiene que estar claro antes de soltar el anterior</li>
+        <li>La mochila desplaza el centro de gravedad hacia atrás — compensar inclinándose ligeramente hacia la roca</li>
+        <li>En zonas expuestas: mirar los pies, no el vacío. El cuerpo va donde va la mirada.</li>
+        <li>Los guantes de alpinismo reducen el tacto — en pasos de roca, guantes finos o sin guantes si la temperatura lo permite</li>
+      </ul>
+      <div class="clave">El error más común es intentar escalar con crampones como si fueran pies de gato. Los crampones en roca funcionan con peso encima y movimientos deliberados — no con dinamismo ni con los dedos del pie.</div>
+    </div>
+    <div class="steps-block">
+      <div class="block-label">Progresión práctica antes de los Alpes</div>
+      <div class="step-item">
+        <span class="step-n">01</span>
+        <div class="step-content">
+          <div class="step-title">Sesión 1: botas sin crampones en roca fácil</div>
+          <p class="step-desc">Primero sentir la rigidez de la bota en roca sin la complicación de los puntos metálicos. Buscar paredes de II–III en el entorno (Montserrat, Pedraforca o similar) y subir con las botas de alpinismo. Adaptar el uso del pie a la suela rígida.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <span class="step-n">02</span>
+        <div class="step-content">
+          <div class="step-title">Sesión 2: crampones en roca de grado bajo</div>
+          <p class="step-desc">Añadir los crampones en terreno de I–II. Foco en colocar las puntas delanteras con precisión en repisas. Los puntos laterales para roca plana. Notar cómo cambia el equilibrio con la rigidez añadida.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <span class="step-n">03</span>
+        <div class="step-content">
+          <div class="step-title">Sesión 3: con mochila cargada (8–10 kg)</div>
+          <p class="step-desc">La mochila cambia el centro de gravedad completamente. Repetir los pasos anteriores con peso. Este es el contexto real del Lyskamm — nunca se escala allí sin mochila.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <span class="step-n">04</span>
+        <div class="step-content">
+          <div class="step-title">En los Écrins: primer banco de pruebas real</div>
+          <p class="step-desc">La Barre des Écrins tiene secciones de roca con crampones. Si los movimientos del día 19 son fluidos y sin tensión, el nivel para el Lyskamm está ahí.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="warn-box">
+    <span class="warn-icon">▲</span>
+    <span>Practicar con crampones en roca desgasta las puntas. Después de cada sesión en roca, revisar los puntos delanteros y afilarlos si es necesario antes de salir al campo. Puntas romas en glaciar significa pérdida de agarre en pendiente empinada.</span>
+  </div>
+</section>
+
+<!-- ══ SKILL 5 — CORDADA EN ARISTA ══ -->
+<section class="skill-section" id="s5">
+  <div class="skill-header">
+    <div class="skill-num">05</div>
+    <div class="skill-meta">
+      <span class="skill-difficulty diff-3">Cordada · ámbar</span>
+      <h2 class="skill-title">Moverse en cordada<br>por una arista</h2>
+      <p class="skill-subtitle">En una arista técnica los tres sois un sistema, no tres individuos. La velocidad de la cordada es seguridad — saber cuándo encordarse y cuándo moverse sin parar es una decisión táctica, no de reglas fijas.</p>
+    </div>
+  </div>
+  <div class="skill-body">
+    <div class="theory-block">
+      <div class="block-label">Cómo funciona la cordada en arista</div>
+      <h4>Moverse a la vez con protecciones naturales</h4>
+      <p>En terreno de arista no se hace <span class="tip">reunión<span class="tip-box">Reunión o punto de seguro: posición fija desde la que un miembro de la cordada asegura al otro mientras avanza. Se usa en terreno muy técnico. En arista moderada se sustituye por protecciones naturales en movimiento continuo.</span></span> completa en cada paso — eso sería interminable. Los tres se mueven a la vez mientras el primero pasa la cuerda por protecciones naturales: <span class="tip">gendarmes<span class="tip-box">Gendarme: torre o aguja de roca que sobresale de una arista. Sirve como protección natural pasando la cuerda alrededor.</span></span>, bloques, puntas de roca. Si alguien cae, la cuerda frena contra el siguiente punto antes de que la caída coja velocidad.</p>
+      <ul style="margin-top:12px;">
+        <li>La cuerda siempre en el lado seguro de la arista — nunca colgando en el vacío de los dos lados a la vez</li>
+        <li>El segundo gestiona la cuerda activamente: ni tensa ni con seno grande</li>
+        <li>Señales acordadas antes de salir: 1 tirón = para, 2 tirones = sigue, 3 tirones = problema</li>
+        <li>El tercero: mismo ritmo que el segundo, atención a la cuerda para no pisarla con los crampones</li>
+      </ul>
+      <div class="clave">Antes de cada tramo delicado: briefing de 30 segundos entre los tres. Qué se hace, quién va primero, señal de stop. En la arista con viento, 30 segundos de planificación valen más que 30 minutos de improvisación.</div>
+    </div>
+    <div class="steps-block">
+      <div class="block-label">Gestión de la cuerda en arista</div>
+      <div class="step-item">
+        <span class="step-n">01</span>
+        <div class="step-content">
+          <div class="step-title">Acortar la cuerda entre personas</div>
+          <p class="step-desc">En arista, la separación se reduce a 4–6 metros entre cada uno. El exceso de cuerda se hace espiras en la mano. Menos cuerda entre personas = más control y menos riesgo de que se enganche en un saliente.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <span class="step-n">02</span>
+        <div class="step-content">
+          <div class="step-title">Protecciones naturales al avanzar</div>
+          <p class="step-desc">El primero pasa la cuerda alrededor de un bloque sólido o gendarme al pasar. No hay que instalar nada — solo usar el terreno. Si el siguiente punto natural está a más de 10 metros, colocar una <span class="tip">cinta expres<span class="tip-box">Cinta expres o exprés: dos mosquetones unidos por una cinta corta. Se usa para anclar la cuerda a un punto de protección y desviarla sin que friccione en la roca.</span></span> en el mejor punto disponible.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <span class="step-n">03</span>
+        <div class="step-content">
+          <div class="step-title">Tramos muy expuestos: de uno en uno</div>
+          <p class="step-desc">Los pasos más aéreos se pasan de uno en uno si hay duda. El primero pasa y ancla en el siguiente punto firme. El segundo avanza mientras el primero asegura desde el ancla. El tercero igual. Lento pero sin errores.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <span class="step-n">04</span>
+        <div class="step-content">
+          <div class="step-title">Descender por una arista</div>
+          <p class="step-desc">El descenso en arista es más exigente mentalmente que la subida — el cuerpo está orientado hacia el vacío. De cara a la roca en los tramos más verticales, de cara al valle en los más tendidos. El primero en bajar revisa el terreno para los siguientes.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="resources-row">
+    <a href="https://www.thebmc.co.uk/en/climb-skills-moving-together" target="_blank" class="resource-card">
+      <div class="resource-thumb thumb-guide"><div class="yt-play"></div><span class="resource-type rt-guide">Guía EN</span></div>
+      <div class="resource-info"><div class="resource-source">British Mountaineering Council</div><div class="resource-title">How to move together when scrambling and climbing — guía técnica completa</div></div>
+    </a>
+    <a href="https://www.ortovox.com/uk/safety-academy-lab-rock/chapter-3-belay-stations-and-belay-techniques/alpine-climbing-knowledge" target="_blank" class="resource-card">
+      <div class="resource-thumb thumb-guide"><div class="yt-play"></div><span class="resource-type rt-guide">Guía EN</span></div>
+      <div class="resource-info"><div class="resource-source">Ortovox LAB ROCK</div><div class="resource-title">Rope team procedure — técnicas correctas en alpinismo en roca</div></div>
+    </a>
+    <a href="https://www.alpinesavvy.com/videos/" target="_blank" class="resource-card">
+      <div class="resource-thumb thumb-guide"><div class="yt-play"></div><span class="resource-type rt-guide">Videos EN</span></div>
+      <div class="resource-info"><div class="resource-source">AlpineSavvy</div><div class="resource-title">Tutorial videos: anclajes alpinos, nudos, gestión de la cuerda — biblioteca completa</div></div>
+    </a>
+  </div>
+</section>
+<!-- ══ SKILL 6 — RÁPEL EN MONTAÑA ══ -->
+<section class="skill-section" id="s6">
+  <div class="skill-header">
+    <div class="skill-num">06</div>
+    <div class="skill-meta">
+      <span class="skill-difficulty diff-4">Rápel alpino · rojo</span>
+      <h2 class="skill-title">Rápel en<br>montaña</h2>
+      <p class="skill-subtitle">La habilidad más crítica para el Plan A'. En el Lyskamm, los rápeles son sobre roca sin anclajes equipados — sin <span class="tip" style="font-size:inherit">spits<span class="tip-box">Spit o parabolt: anclaje metálico fijo instalado en la roca en rutas de escalada deportiva. En alpinismo no existen — los anclajes los construye el propio escalador.</span></span>, con crampones, a veces con viento y frío.</p>
+    </div>
+  </div>
+  <div class="skill-body">
+    <div class="theory-block">
+      <div class="block-label">La diferencia con el rápel en roca equipada</div>
+      <h4>Construir el anclaje desde cero</h4>
+      <p>En escalada deportiva, los anclajes ya están colocados. En alpinismo, el anclaje lo construyes tú con lo que hay: un bloque de roca, una grieta con un <span class="tip">friend<span class="tip-box">Friend o fisurero: dispositivo de aluminio con levas que se expanden al soltarlo dentro de una grieta de roca, creando un punto de seguro. Se usa cuando no hay anclajes fijos.</span></span> o un <span class="tip">nut<span class="tip-box">Nut o empotrador: cuña metálica en forma de trapecio que se encaja en una grieta de roca. Más ligero que un friend, funciona en grietas de tamaño preciso.</span></span>, una punta de roca con cordino. Nadie lo ha revisado antes.</p>
+      <ul style="margin-top:12px;">
+        <li><strong style="color:var(--text)">Bloque natural:</strong> cordino (6mm, 60cm) en <span class="tip">girth hitch<span class="tip-box">Girth hitch o nudo de alondra: nudo simple que pasa el cordino alrededor de un bloque o saliente de roca. Rápido de hacer y suficiente para anclajes en bloques bien encastrados.</span></span> alrededor del bloque. Verificar que no puede deslizar.</li>
+        <li><strong style="color:var(--text)">Grieta con friend:</strong> friend del tamaño correcto, <span class="tip">mosquetón de seguro<span class="tip-box">Mosquetón de seguro o HMS: mosquetón con cierre de rosca o automático. Obligatorio en el punto de anclaje del rápel — un mosquetón normal sin seguro puede abrirse.</span></span>, cinta de igualación.</li>
+        <li><strong style="color:var(--text)">Punta de roca:</strong> cordino por encima, nudo de unión por delante. Simple y rápido.</li>
+        <li><strong style="color:var(--text)">Dejar material:</strong> en rápel de descenso se deja un mosquetón o un trozo de cordino. Llevar siempre 4–5 metros de cordino de 6mm para esto.</li>
+      </ul>
+      <div class="clave">Regla de los dos puntos: un anclaje de rápel en montaña necesita siempre dos puntos independientes. Si uno falla, el otro aguanta. Un solo punto, por sólido que parezca, no es suficiente.</div>
+    </div>
+    <div class="steps-block">
+      <div class="block-label">Secuencia completa · paso a paso</div>
+
+      <div class="step-item">
+        <span class="step-n">01</span>
+        <div class="step-content">
+          <div class="step-with-img">
+            <div>
+              <div class="step-title">Construir el anclaje con dos puntos</div>
+              <p class="step-desc">Identificar dos puntos sólidos e independientes. Unirlos con cordino o cinta creando un <span class="tip">punto central<span class="tip-box">Punto central o masterpoint: el punto único desde el que se cuelga el descensor. Se crea uniendo dos anclajes con un nudo plano o ballestrinque para que compartan la carga.</span></span> con nudo plano y un mosquetón de seguro. Tirar con fuerza manual antes de cargar el sistema. Si hay duda, cambiar de anclaje.</p>
+            </div>
+            <div class="step-illus">
+              <svg viewBox="0 0 160 110" xmlns="http://www.w3.org/2000/svg">
+                <rect width="160" height="110" fill="#1C1C19"/>
+                <!-- Rock mass -->
+                <path d="M10 40 Q25 20 55 25 Q75 18 90 30 Q110 22 140 35 L145 80 Q120 95 80 90 Q40 95 15 80 Z" fill="#2A2A26" stroke="#3A3A34" stroke-width="1"/>
+                <!-- Block 1 -->
+                <rect x="30" y="28" width="22" height="18" rx="3" fill="#3A3A34" stroke="#5A5A54" stroke-width="1"/>
+                <!-- Block 2 -->
+                <rect x="95" y="24" width="22" height="18" rx="3" fill="#3A3A34" stroke="#5A5A54" stroke-width="1"/>
+                <!-- Sling 1 -->
+                <ellipse cx="41" cy="37" rx="14" ry="8" fill="none" stroke="#D4964A" stroke-width="2" stroke-dasharray="4,2"/>
+                <!-- Sling 2 -->
+                <ellipse cx="106" cy="33" rx="14" ry="8" fill="none" stroke="#D4964A" stroke-width="2" stroke-dasharray="4,2"/>
+                <!-- Lines to masterpoint -->
+                <line x1="41" y1="45" x2="78" y2="68" stroke="#D4964A" stroke-width="1.5"/>
+                <line x1="106" y1="41" x2="78" y2="68" stroke="#D4964A" stroke-width="1.5"/>
+                <!-- Masterpoint -->
+                <circle cx="78" cy="70" r="7" fill="#1C1C19" stroke="#7BB8D4" stroke-width="2"/>
+                <circle cx="78" cy="70" r="3" fill="#7BB8D4"/>
+                <!-- Rope down -->
+                <line x1="78" y1="77" x2="78" y2="100" stroke="#7BB8D4" stroke-width="2" stroke-dasharray="4,3"/>
+                <!-- Labels -->
+                <text x="18" y="65" font-size="8" fill="#5A5A54" font-family="monospace">Punto 1</text>
+                <text x="108" y="60" font-size="8" fill="#5A5A54" font-family="monospace">Punto 2</text>
+                <text x="84" y="72" font-size="8" fill="#7BB8D4" font-family="monospace">MC</text>
+              </svg>
+              <div style="font-family:'Space Mono',monospace;font-size:8px;color:var(--text3);padding:5px 8px;background:var(--surface2);line-height:1.4;">Dos puntos independientes → punto central (MC)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <span class="step-n">02</span>
+        <div class="step-content">
+          <div class="step-with-img">
+            <div>
+              <div class="step-title">Pasar la cuerda y comprobar que se puede recuperar</div>
+              <p class="step-desc">La cuerda se pasa doblada por el punto central. Antes de bajar nadie, comprobar que al tirar de un extremo la cuerda se recupera sin engancharse. En terreno irregular, lanzar la cuerda en madejas pequeñas — no toda de golpe para que no se enrede.</p>
+            </div>
+            <div class="step-illus">
+              <svg viewBox="0 0 160 110" xmlns="http://www.w3.org/2000/svg">
+                <rect width="160" height="110" fill="#1C1C19"/>
+                <!-- Anchor point -->
+                <circle cx="80" cy="20" r="10" fill="#1C1C19" stroke="#7BB8D4" stroke-width="2"/>
+                <circle cx="80" cy="20" r="4" fill="#7BB8D4"/>
+                <!-- Rope doubled through -->
+                <path d="M80 30 Q60 50 50 80 Q48 90 46 100" fill="none" stroke="#7BB8D4" stroke-width="2.5"/>
+                <path d="M80 30 Q100 50 110 80 Q112 90 114 100" fill="none" stroke="#9A9690" stroke-width="2.5" stroke-dasharray="6,3"/>
+                <!-- Middle mark -->
+                <circle cx="80" cy="30" r="4" fill="#D4964A"/>
+                <!-- Arrow pull -->
+                <path d="M114 90 L120 75 L126 90" fill="none" stroke="#6AAA7A" stroke-width="1.5"/>
+                <text x="122" y="105" font-size="8" fill="#6AAA7A" font-family="monospace">tirar</text>
+                <!-- Labels -->
+                <text x="30" y="55" font-size="8" fill="#7BB8D4" font-family="monospace">cabo A</text>
+                <text x="112" y="55" font-size="8" fill="#9A9690" font-family="monospace">cabo B</text>
+                <text x="56" y="20" font-size="8" fill="#5A5A54" font-family="monospace">mitad</text>
+                <line x1="68" y1="25" x2="78" y2="30" stroke="#5A5A54" stroke-width="1"/>
+              </svg>
+              <div style="font-family:'Space Mono',monospace;font-size:8px;color:var(--text3);padding:5px 8px;background:var(--surface2);line-height:1.4;">Cuerda doblada. Probar recuperación antes de bajar.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <span class="step-n">03</span>
+        <div class="step-content">
+          <div class="step-with-img">
+            <div>
+              <div class="step-title">Colocar el nudo de autoaseguro (prusik)</div>
+              <p class="step-desc">Un <span class="tip">prusik<span class="tip-box">Prusik: nudo de fricción hecho con un cordino fino (5–6mm) alrededor de la cuerda gruesa. Desliza cuando se empuja hacia arriba pero se bloquea cuando se carga hacia abajo. Funciona como freno de emergencia en el rápel.</span></span> de 6mm en la cuerda, unido al arnés con un mosquetón, por debajo del descensor. Si se suelta el descensor, el prusik frena. En montaña no es opcional — es la diferencia entre un error recuperable y uno que no lo es.</p>
+            </div>
+            <div class="step-illus">
+              <svg viewBox="0 0 160 110" xmlns="http://www.w3.org/2000/svg">
+                <rect width="160" height="110" fill="#1C1C19"/>
+                <!-- Rope -->
+                <line x1="80" y1="5" x2="80" y2="105" stroke="#7BB8D4" stroke-width="5" stroke-linecap="round"/>
+                <!-- Descensor (ATC shape) -->
+                <rect x="60" y="15" width="40" height="22" rx="4" fill="#2A2A26" stroke="#5A5A54" stroke-width="1.5"/>
+                <circle cx="70" cy="26" r="5" fill="#1C1C19" stroke="#9A9690" stroke-width="1"/>
+                <circle cx="90" cy="26" r="5" fill="#1C1C19" stroke="#9A9690" stroke-width="1"/>
+                <text x="48" y="30" font-size="8" fill="#5A5A54" font-family="monospace">descensor</text>
+                <!-- Prusik knot -->
+                <path d="M65 58 Q55 62 60 70 Q65 78 75 72 Q85 66 85 58 Q85 50 75 50 Q65 50 65 58Z" fill="none" stroke="#D4964A" stroke-width="2"/>
+                <path d="M75 72 L75 95" stroke="#D4964A" stroke-width="1.5" stroke-dasharray="3,2"/>
+                <!-- Arrow -->
+                <path d="M90 65 L100 55" stroke="#6AAA7A" stroke-width="1.5" marker-end="url(#arr)"/>
+                <text x="100" y="52" font-size="8" fill="#6AAA7A" font-family="monospace">prusik</text>
+                <text x="76" y="100" font-size="8" fill="#D4964A" font-family="monospace">arnés</text>
+                <!-- Block indicator -->
+                <text x="105" y="72" font-size="8" fill="#C4544A" font-family="monospace">bloquea↓</text>
+              </svg>
+              <div style="font-family:'Space Mono',monospace;font-size:8px;color:var(--text3);padding:5px 8px;background:var(--surface2);line-height:1.4;">Prusik debajo del descensor → freno de emergencia</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <span class="step-n">04</span>
+        <div class="step-content">
+          <div class="step-with-img">
+            <div>
+              <div class="step-title">Bajar con crampones y mochila</div>
+              <p class="step-desc">Los crampones pueden engancharse en grietas de roca durante el rápel. Mantener los pies planos contra la pared, no las puntas perpendiculares a la roca. La mochila desplaza el centro de gravedad hacia atrás — inclinarse hacia adelante al iniciar el descenso para compensar.</p>
+            </div>
+            <div class="step-illus">
+              <svg viewBox="0 0 160 110" xmlns="http://www.w3.org/2000/svg">
+                <rect width="160" height="110" fill="#1C1C19"/>
+                <!-- Wall -->
+                <rect x="10" y="0" width="30" height="110" fill="#2A2A26"/>
+                <line x1="40" y1="0" x2="40" y2="110" stroke="#3A3A34" stroke-width="1"/>
+                <!-- Rope from top -->
+                <line x1="25" y1="0" x2="25" y2="110" stroke="#7BB8D4" stroke-width="2"/>
+                <!-- Person silhouette -->
+                <!-- Head -->
+                <circle cx="85" cy="38" r="10" fill="#3A3A34" stroke="#5A5A54" stroke-width="1"/>
+                <!-- Body leaning forward -->
+                <line x1="85" y1="48" x2="70" y2="75" stroke="#5A5A54" stroke-width="3"/>
+                <!-- Arms -->
+                <line x1="80" y1="58" x2="50" y2="52" stroke="#5A5A54" stroke-width="2"/>
+                <line x1="80" y1="58" x2="55" y2="70" stroke="#5A5A54" stroke-width="2"/>
+                <!-- Legs flat against wall -->
+                <line x1="70" y1="75" x2="45" y2="85" stroke="#5A5A54" stroke-width="2"/>
+                <line x1="70" y1="75" x2="48" y2="95" stroke="#5A5A54" stroke-width="2"/>
+                <!-- Crampons (flat) -->
+                <rect x="30" y="82" width="18" height="5" rx="1" fill="#9A9690"/>
+                <rect x="33" y="91" width="18" height="5" rx="1" fill="#9A9690"/>
+                <!-- Mochila -->
+                <rect x="85" y="45" width="22" height="28" rx="3" fill="#2A4A5C" stroke="#7BB8D4" stroke-width="1"/>
+                <!-- Rope connection -->
+                <line x1="50" y1="52" x2="25" y2="30" stroke="#7BB8D4" stroke-width="1.5" stroke-dasharray="3,2"/>
+                <!-- Angle arrow -->
+                <path d="M88 40 Q100 30 95 20" fill="none" stroke="#6AAA7A" stroke-width="1.5"/>
+                <text x="98" y="18" font-size="8" fill="#6AAA7A" font-family="monospace">hacia la</text>
+                <text x="98" y="27" font-size="8" fill="#6AAA7A" font-family="monospace">roca</text>
+              </svg>
+              <div style="font-family:'Space Mono',monospace;font-size:8px;color:var(--text3);padding:5px 8px;background:var(--surface2);line-height:1.4;">Pies planos en la pared. Inclinarse hacia la roca con mochila.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <span class="step-n">05</span>
+        <div class="step-content">
+          <div class="step-with-img">
+            <div>
+              <div class="step-title">Recuperar la cuerda</div>
+              <p class="step-desc">El último en bajar recupera la cuerda tirando del extremo correcto. Si la cuerda no baja: no tirar con fuerza — subir a liberar el enganche antes de que se encaje definitivamente. Una cuerda bloqueada en altura es una situación seria.</p>
+            </div>
+            <div class="step-illus">
+              <svg viewBox="0 0 160 110" xmlns="http://www.w3.org/2000/svg">
+                <rect width="160" height="110" fill="#1C1C19"/>
+                <!-- Anchor at top -->
+                <circle cx="80" cy="15" r="8" fill="#1C1C19" stroke="#7BB8D4" stroke-width="2"/>
+                <circle cx="80" cy="15" r="3" fill="#7BB8D4"/>
+                <!-- Rope both strands -->
+                <path d="M78 23 Q65 50 60 90 Q59 95 58 105" fill="none" stroke="#7BB8D4" stroke-width="2.5"/>
+                <path d="M82 23 Q95 50 100 90 Q101 95 102 105" fill="none" stroke="#9A9690" stroke-width="2.5"/>
+                <!-- Person at bottom pulling -->
+                <circle cx="130" cy="80" r="8" fill="#3A3A34" stroke="#5A5A54"/>
+                <line x1="130" y1="88" x2="130" y2="100" stroke="#5A5A54" stroke-width="2"/>
+                <line x1="122" y1="92" x2="108" y2="98" stroke="#5A5A54" stroke-width="2"/>
+                <line x1="130" y1="100" x2="122" y2="110" stroke="#5A5A54" stroke-width="2"/>
+                <line x1="130" y1="100" x2="138" y2="110" stroke="#5A5A54" stroke-width="2"/>
+                <!-- Pull arrow -->
+                <path d="M108 98 L100 95" fill="none" stroke="#6AAA7A" stroke-width="2" marker-end="url(#a2)"/>
+                <!-- Labels -->
+                <text x="40" y="55" font-size="8" fill="#7BB8D4" font-family="monospace">cabo A</text>
+                <text x="103" y="55" font-size="8" fill="#9A9690" font-family="monospace">tirar</text>
+                <text x="103" y="64" font-size="8" fill="#9A9690" font-family="monospace">este</text>
+                <!-- Check mark -->
+                <text x="58" y="20" font-size="9" fill="#6AAA7A">✓ libre</text>
+              </svg>
+              <div style="font-family:'Space Mono',monospace;font-size:8px;color:var(--text3);padding:5px 8px;background:var(--surface2);line-height:1.4;">Tirar del cabo correcto para recuperar. Si no baja: no forzar.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="resources-row">
+    <a href="https://encorda2.com/2011/09/18/como-rapelar-con-seguridad/" target="_blank" class="resource-card">
+      <div class="resource-thumb"><div class="yt-play"></div><span class="resource-type rt-es">ES · Vídeo</span></div>
+      <div class="resource-info"><div class="resource-source">Encorda2 · Pedro Partal · En español</div><div class="resource-title">Cómo rapelar con seguridad — referencia en castellano, técnica paso a paso</div></div>
+    </a>
+    <a href="https://www.youtube.com/watch?v=2JH-I8PevqU" target="_blank" class="resource-card">
+      <div class="resource-thumb"><div class="yt-play"></div><span class="resource-type rt-video">Video EN</span></div>
+      <div class="resource-info"><div class="resource-source">Ortovox LAB ROCK · YouTube</div><div class="resource-title">Safe rappelling with tubes when alpine climbing — prusik y técnica de tubo</div></div>
+    </a>
+    <a href="https://www.alpinesavvy.com/blog/rappelling-into-the-unknown" target="_blank" class="resource-card">
+      <div class="resource-thumb thumb-guide"><div class="yt-play"></div><span class="resource-type rt-guide">Guía EN</span></div>
+      <div class="resource-info"><div class="resource-source">AlpineSavvy</div><div class="resource-title">Rappelling into the unknown — anclajes en terreno sin equipar, técnicas avanzadas</div></div>
+    </a>
+  </div>
+
+  <div class="error-box" style="margin-top:24px;">
+    <span class="error-icon">!</span>
+    <div>
+      <strong style="color:#F0A09A;">Este es el punto de decisión del Plan A'.</strong> Si en Ailefroide y en el Refuge des Écrins los rápeles salen limpios — anclaje sólido, prusik en su sitio, descenso controlado con mochila y botas de alpinismo — el Lyskamm Oriental es un objetivo legítimo. Si en alguno de esos rápeles hay tensión o duda en el anclaje, la Punta Gnifetti a 4.554m es la decisión correcta y nadie pierde nada.
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>Habilidades técnicas · Lyskamm Oriental · Julio 2025</span>
+  <span>Alex · Jorge · Nacho</span>
+  <span>Preparación Pico Lenin 7.134m</span>
+</footer>
+
+<script>
+const sections = document.querySelectorAll('.skill-section');
+const dots = document.querySelectorAll('.snav-dot');
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const idx = Array.from(sections).findIndex(s => s.id === entry.target.id);
+      dots.forEach(d => d.style.transform = '');
+      if (idx >= 0) dots[idx].style.transform = 'scale(1.25)';
+    }
+  });
+}, { threshold: 0.35 });
+sections.forEach(s => obs.observe(s));
+
+const fadeObs = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.style.opacity = '1';
+      entry.target.style.transform = 'translateY(0)';
+      fadeObs.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.05 });
+document.querySelectorAll('.skill-section').forEach((s, i) => {
+  s.style.opacity = '0';
+  s.style.transform = 'translateY(24px)';
+  s.style.transition = `opacity .6s ${i*0.05}s ease, transform .6s ${i*0.05}s ease`;
+  fadeObs.observe(s);
+});
+</script>
+</body>
+</html>
